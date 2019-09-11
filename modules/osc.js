@@ -21,14 +21,21 @@ class SynthOsc extends SynthSource {
 
         // create and initialize FX
         this.oscFx = new Fx(this.audioCtx);
-        this.oscFx.setFilter(2000, attack, release);
+        this.oscFx.setFilter(SynthObj.filter, attack, release);
         this.oscFx.setPan(SynthObj.pan);
         this.oscFx.setVol(SynthObj.vol);
         
-        // connect osc and env to output
+        // connect osc to output, all patching here
         this.osc.connect(oscEnv);
-        oscEnv.connect(this.oscFx.filter);
-        this.oscFx.filter.connect(this.oscFx.panner);
+        
+        // bypass the filter if not active
+        if (SynthObj.filter > 20) {
+            oscEnv.connect(this.oscFx.filter);
+            this.oscFx.filter.connect(this.oscFx.panner);
+        } else {
+            oscEnv.connect(this.oscFx.panner);
+        }
+
         this.oscFx.panner.connect(this.oscFx.fader);
         this.oscFx.fader.connect(this.out);
     }
@@ -72,8 +79,24 @@ class SynthNoise extends SynthSource {
         let noiseEnv = this.audioCtx.createGain();
         this.createEnv(noiseEnv, attack, release);
 
+        // create and initialize FX
+        this.noiseFx = new Fx(this.audioCtx);
+        this.noiseFx.setFilter(SynthObj.filter, attack, release);
+        this.noiseFx.setPan(SynthObj.pan);
+        this.noiseFx.setVol(SynthObj.vol);
+
         // connect to output
-        this.noise.connect(noiseEnv).connect(this.out)
+        this.noise.connect(noiseEnv);
+
+        if (SynthObj.filter > 20) {
+            noiseEnv.connect(this.noiseFx.filter);
+            this.noiseFx.filter.connect(this.noiseFx.panner);
+        } else {
+            noiseEnv.connect(this.noiseFx.panner);
+        }
+
+        this.noiseFx.panner.connect(this.noiseFx.fader);
+        this.noiseFx.fader.connect(this.out);
     }
     
     // play
