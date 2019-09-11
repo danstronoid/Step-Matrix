@@ -21,12 +21,14 @@ class SynthOsc extends SynthSource {
 
         // create and initialize FX
         this.oscFx = new Fx(this.audioCtx);
+        this.oscFx.setFilter(2000, attack, release);
         this.oscFx.setPan(SynthObj.pan);
         this.oscFx.setVol(SynthObj.vol);
         
         // connect osc and env to output
         this.osc.connect(oscEnv);
-        oscEnv.connect(this.oscFx.panner);
+        oscEnv.connect(this.oscFx.filter);
+        this.oscFx.filter.connect(this.oscFx.panner);
         this.oscFx.panner.connect(this.oscFx.fader);
         this.oscFx.fader.connect(this.out);
     }
