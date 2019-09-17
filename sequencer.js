@@ -1,3 +1,5 @@
+// timing and sequencer based on https://www.html5rocks.com/en/tutorials/audio/scheduling/ by Chris Wilson
+
 import {SynthOsc, SynthNoise} from './modules/osc.js';
 import {Notes} from './modules/notes.js'
 
@@ -8,16 +10,17 @@ const audioCtx = new AudioContext();
 // initialize our midi notes
 const Note = new Notes;
 
+// keep track of the sources
+let sourceCount = 0;
+
 let timerID; // create a timer
 
-// timing and sequencer based on https://www.html5rocks.com/en/tutorials/audio/scheduling/ by Chris Wilson
-
 // set the global tempo
-let tempo = 140.0;
+let tempo = Number($('#tempo').val());
 
 // set amount of time for the scheduler to schedule ahead
-let lookahead = 0.0; // (ms)
-let scheduleAheadTime = 0.0; // (sec)
+let lookahead = 25.0; // (ms)
+let scheduleAheadTime = 0.1; // (sec)
 
 // keep track of the current note in the pattern 
 // and the amount of time until the next note 
@@ -33,55 +36,80 @@ function nextNote() {
 }
 
 // create an object containing synth parameters to pass to synth class
-function SynthObj(source) {
-    this.oscType = $('#' + source).find('#oscType').val();
-    this.freq = $('#' + source).find('#freq').val();
-    this.attack = Number($('#' + source).find('#attack').val());
-    this.release = Number($('#' + source).find('#release').val());
-    this.filter = Number($('#' + source).find('#filter').val());
-    this.pan = Number($('#' + source).find('#pan').val());
-    this.vol = Number($('#' + source).find('#volume').val());
+function SynthObj(parameters) {
+    this.oscType = $('#' + parameters).find('#oscType').val();
+    this.freq = $('#' + parameters).find('#freq').val();
+    this.attack = Number($('#' + parameters).find('#attack').val());
+    this.release = Number($('#' + parameters).find('#release').val());
+    this.filter = Number($('#' + parameters).find('#filter').val());
+    this.pan = Number($('#' + parameters).find('#pan').val());
+    this.vol = Number($('#' + parameters).find('#volume').val());
 }
 
 // responsible for playing the scheduled notes
-//const notesInQueue = [];
-function scheduleNote() {
-    //notesInQueue.push({note: beatNumber, time: time});
-
-    if ($('#track0').find('#b' + currentNote).hasClass('active')) { 
-        let source;       
-        let params = new SynthObj("source1");
-
-        // get midi note and set to freq
-        let noteNum = Number($('#notes0').find('#n' + currentNote).val());
-        params.freq = Note.midi(noteNum); 
-
-        if (params.oscType == 'noise') {
-            source = new SynthNoise(audioCtx, params);
-        } else {
-            source = new SynthOsc(audioCtx, params);
+function scheduleNote(beat, time) {
+    for (let i = 0; i <= sourceCount; ++i) {
+        if ($('#track' + i).find('#b' + beat).hasClass('active')) { 
+            let source;       
+            let params = new SynthObj("parameters" + i);
+    
+            // get midi note and set to freq
+            let noteNum = Number($('#notes' + i).find('#n' + beat).val());
+            params.freq = Note.midi(noteNum); 
+    
+            if (params.oscType == 'noise') {
+                source = new SynthNoise(audioCtx, params);
+            } else {
+                source = new SynthOsc(audioCtx, params);
+            }
+            source.play(time);   
         }
-        source.play();   
     }
-
 }
 
-// responsible for scheduling next note
+// responsible for scheduling next note ahead of time
 function scheduler() {
-
     while (nextNoteTime < audioCtx.currentTime + scheduleAheadTime) {
-        scheduleNote();
+        scheduleNote(currentNote, nextNoteTime); //
         nextNote();
     }
     timerID = window.setTimeout(scheduler, lookahead);
 }
 
 function setup() {
-
+    
     let isPlaying = false;
+
+    // listen for tempo changes
+    $('#tempo').change( () => {
+        tempo = Number($('#tempo').val());
+        console.log("tempo = " + tempo);
+    });
+
+    // add a new source
+    $('#addSource').on('click', () => {
+        if (sourceCount < 3) {
+            ++sourceCount;
+            $('#notes0').clone().attr('id', 'notes' + sourceCount).appendTo('tbody');
+            $('#track0').clone().attr('id', 'track' + sourceCount).appendTo('tbody');
+            $('#parameters0').clone().attr('id', 'parameters' + sourceCount).appendTo('body');
+            $('#track' + sourceCount).find("#controls").attr('data-target', '#parameters' + sourceCount);
+        }     
+    });
+
+    // remove a source
+    $('#rmSource').on('click', () => {
+        if (sourceCount > 0) {
+            $('#notes' + sourceCount).remove();
+            $('#track' + sourceCount).remove();
+            $('#parameters' + sourceCount).remove();
+            --sourceCount;
+        }
+    });
+    
   
     // button to start playback
-    document.querySelector('#play').addEventListener('click', function() {
+    $('#play').on('click', () => {
         isPlaying = !isPlaying;
 
         if (isPlaying) {

@@ -1,5 +1,4 @@
 import {SynthSource} from './source.js';
-import {Fx} from './fx.js';
 
 // creates a synth oscillator
 class SynthOsc extends SynthSource {
@@ -12,43 +11,26 @@ class SynthOsc extends SynthSource {
         this.osc.frequency.value = SynthObj.freq;
 
         // set attack and release
-        let attack = SynthObj.attack;
-        let release = SynthObj.release;
+        this.attack = SynthObj.attack;
+        this.release = SynthObj.release;
 
         // create gain envelope
-        let oscEnv = this.audioCtx.createGain();
-        this.createEnv(oscEnv, attack, release);
+        this.oscEnv = this.audioCtx.createGain();
+        this.createEnv(this.oscEnv, this.attack, this.release);
 
-        // create and initialize FX
-        this.oscFx = new Fx(this.audioCtx);
-        this.oscFx.setFilter(SynthObj.filter, attack, release);
-        this.oscFx.setPan(SynthObj.pan);
-        this.oscFx.setVol(SynthObj.vol);
+        // set fx parameters
+        this.fx.setFilter(SynthObj.filter, this.attack, this.release);
+        this.fx.setPan(SynthObj.pan);
+        this.fx.setVol(SynthObj.vol);
         
-        // connect osc to output, all patching here
-        this.osc.connect(oscEnv);
-        
-        // bypass the filter if not active
-        if (SynthObj.filter > 20) {
-            oscEnv.connect(this.oscFx.filter);
-            this.oscFx.filter.connect(this.oscFx.panner);
-        } else {
-            oscEnv.connect(this.oscFx.panner);
-        }
-
-        this.oscFx.panner.connect(this.oscFx.fader);
-        this.oscFx.fader.connect(this.out);
+        // connect to output, all patching here
+        this.connectOutput(this.osc.connect(this.oscEnv));
     }
 
     // play
-    play() {
-        this.osc.start();
-
-        // stop and disconnect after end
-        this.osc.onended = function () {
-            this.osc.stop();
-            this.osc.disconnect();
-        }
+    play(time) {
+        this.osc.start(time);
+        this.osc.stop(time + this.attack + this.release);
     }
 }
 
@@ -72,42 +54,26 @@ class SynthNoise extends SynthSource {
         this.noise.buffer = buffer;
 
         // set attack and release
-        let attack = SynthObj.attack;
-        let release = SynthObj.release;
+        this.attack = SynthObj.attack;
+        this.release = SynthObj.release;
 
         // create gain env
-        let noiseEnv = this.audioCtx.createGain();
-        this.createEnv(noiseEnv, attack, release);
+        this.noiseEnv = this.audioCtx.createGain();
+        this.createEnv(this.noiseEnv, this.attack, this.release);
 
-        // create and initialize FX
-        this.noiseFx = new Fx(this.audioCtx);
-        this.noiseFx.setFilter(SynthObj.filter, attack, release);
-        this.noiseFx.setPan(SynthObj.pan);
-        this.noiseFx.setVol(SynthObj.vol);
+        // set fx parameters
+        this.fx.setFilter(SynthObj.filter, this.attack, this.release);
+        this.fx.setPan(SynthObj.pan);
+        this.fx.setVol(SynthObj.vol);
 
-        // connect to output
-        this.noise.connect(noiseEnv);
-
-        if (SynthObj.filter > 20) {
-            noiseEnv.connect(this.noiseFx.filter);
-            this.noiseFx.filter.connect(this.noiseFx.panner);
-        } else {
-            noiseEnv.connect(this.noiseFx.panner);
-        }
-
-        this.noiseFx.panner.connect(this.noiseFx.fader);
-        this.noiseFx.fader.connect(this.out);
+        // connect to output, all patching here
+        this.connectOutput(this.noise.connect(this.noiseEnv));
     }
     
     // play
-    play() {
-        this.noise.start();
-
-        // stop and disconnect after end
-        this.noise.onended = () => {
-            this.noise.stop();
-            this.noise.disconnect();
-        }
+    play(time) {
+        this.noise.start(time);
+        this.noise.stop(time + this.attack + this.release);
     }
 }
 
