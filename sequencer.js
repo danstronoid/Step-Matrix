@@ -71,9 +71,9 @@ function scheduleNote(beat, time) {
             }
             source.play(time);
 
-            $('#track' + i).find('#b' + beat).attr('class', 'btn btn-danger btn-lg active');
+            $('#track' + i).find('#b' + beat).attr('class', 'btn btn-danger btn-lg step active');
             setTimeout( () => {
-                $('#track' + i).find('#b' + beat).attr('class', 'btn btn-light btn-outline-dark btn-lg active');
+                $('#track' + i).find('#b' + beat).attr('class', 'btn btn-light btn-outline-dark btn-lg step active');
             }, 200);
         } else {
             /* $('#track' + i).find('#b' + beat).attr('class', 'btn btn-light btn-outline-danger btn-lg');
@@ -116,7 +116,7 @@ function setup() {
 
             for (let i = 0; i <= stepCount; ++i) {
                 $('#notes' + sourceCount).find('#n' + i).val('-');
-                $('#track' + sourceCount).find('#b' + i).attr('class', 'btn btn-light btn-outline-dark btn-lg');
+                $('#track' + sourceCount).find('#b' + i).attr('class', 'btn btn-light btn-outline-dark btn-lg step');
             }
         }     
     });
@@ -138,7 +138,7 @@ function setup() {
 
             // create a new step for each source
             for (let i = 0; i <= sourceCount; ++i) {
-                let cloneB = $('#b0').clone().attr('id', 'b' + stepCount).attr('class', 'btn btn-light btn-outline-dark btn-lg').text(stepCount + 1);
+                let cloneB = $('#b0').clone().attr('id', 'b' + stepCount).attr('class', 'btn btn-light btn-outline-dark btn-lg step').text(stepCount + 1);
                 let newB = $('<td></td>').html(cloneB);
                 $('#track' + i).append(newB);
 
