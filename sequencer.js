@@ -106,7 +106,7 @@ function setup() {
 
     // add a new source
     $('#addSource').on('click', () => {
-        if (sourceCount < 3) {
+        if (sourceCount < 5) {
             ++sourceCount;
             $('#notes0').clone().attr('id', 'notes' + sourceCount).appendTo('tbody');
             $('#track0').clone().attr('id', 'track' + sourceCount).appendTo('tbody');
