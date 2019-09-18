@@ -10,6 +10,17 @@ class SynthOsc extends SynthSource {
         this.osc.type = SourceArgs.oscType;
         this.osc.frequency.value = SourceArgs.freq;
 
+        //create FM modulation osc
+        this.mod = this.audioCtx.createOscillator();
+        this.mod.type = SourceArgs.modType;
+        this.mod.frequency.value = SourceArgs.freq * SourceArgs.multi;
+        this.modGain = this.audioCtx.createGain();
+        this.modGain.gain.value = SourceArgs.modDepth;
+
+        // connect the modulator to the osc freq
+        this.mod.connect(this.modGain);
+        this.modGain.connect(this.osc.frequency);
+
         // set attack and release
         this.attack = SourceArgs.attack;
         this.release = SourceArgs.release;
@@ -24,8 +35,10 @@ class SynthOsc extends SynthSource {
 
     // play
     play(time) {
+        this.mod.start(time);
         this.osc.start(time);
-        this.osc.stop(time + this.attack + this.release);
+        this.osc.stop(time + this.attack + this.release + this.delay);
+        this.mod.stop(time + this.attack + this.release + this.delay);
     }
 }
 

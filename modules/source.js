@@ -14,6 +14,7 @@ class SynthSource {
 
         // set fx parameters
         this.fxArgs = FxArgs;
+        this.fx.setDelay(FxArgs.delay, FxArgs.dLvl, FxArgs.dPan);
         this.fx.setFilter(FxArgs.filter, FxArgs.ftype, FxArgs.fattack, FxArgs.frelease);
         this.fx.setPan(FxArgs.pan);
         this.fx.setVol(FxArgs.vol);
@@ -29,6 +30,11 @@ class SynthSource {
         return this.audioCtx.destination;
     }
 
+    // get delay time
+    get delay() {
+        return this.fxArgs.delay;
+    }
+
     // connect source to fx and output
     connectOutput(source) {
 
@@ -41,6 +47,15 @@ class SynthSource {
         }
         this.fx.panner.connect(this.fx.fader);
         this.fx.fader.connect(this.out);
+
+        if (this.fxArgs.delay > 0) {
+            this.fx.fader.connect(this.fx.delay);
+            this.fx.delay.connect(this.fx.dFilter);
+            this.fx.dFilter.connect(this.fx.dPan);
+            this.fx.dPan.connect(this.fx.dGain);
+            this.fx.dGain.connect(this.out);
+            //TODO dPan
+        }
     }
         
     // create an envelope

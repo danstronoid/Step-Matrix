@@ -34,15 +34,22 @@ function nextNote() {
     }
 }
 
-// create an object containing arguments to pass to the source class
+// an object containing arguments to pass to the source class
 function SourceArgs(parameters) {
     this.oscType = $('#' + parameters).find('#oscType').val();
     this.freq = $('#' + parameters).find('#freq').val();
     this.attack = Number($('#' + parameters).find('#attack').val());
     this.release = Number($('#' + parameters).find('#release').val());
+    this.modType = $('#' + parameters).find('#modType').val();
+    this.multi = $('#' + parameters).find('#multi').val();
+    this.modDepth = Number($('#' + parameters).find('#modDepth').val());
 }
 
+// an object containing arguments to pass to the fx class
 function FxArgs(parameters) {
+    this.delay = Number($('#' + parameters).find('#delay').val());
+    this.dLvl = Number($('#' + parameters).find('#dLvl').val());
+    this.dPan = Number($('#' + parameters).find('#dPan').val());
     this.filter = Number($('#' + parameters).find('#filter').val());
     this.ftype = $('#' + parameters).find('#fType').val();
     this.fattack = Number($('#' + parameters).find('#fattack').val());

@@ -83,7 +83,7 @@
                         </tr>
     
                         <tr id="track0">
-                            <td><button type="button" id="controls" class="btn btn-dark btn-lg custom-button" data-toggle="modal" data-target="#parameters0">S1</button></td>
+                            <td><button type="button" id="controls" class="btn btn-dark btn-lg custom-button step" data-toggle="modal" data-target="#parameters0">S1</button></td>
                             <td><button type="button" data-toggle="button" id="b0" class="btn btn-light btn-outline-dark btn-lg step" aria-pressed="false">1</button></td>
                             <td><button type="button" data-toggle="button" id="b1" class="btn btn-light btn-outline-dark btn-lg step" aria-pressed="false">2</button></td>
                             <td><button type="button" data-toggle="button" id="b2" class="btn btn-light btn-outline-dark btn-lg step" aria-pressed="false">3</button></td>
@@ -114,7 +114,7 @@
 
         <!-- Control Modals -->
         <div class="modal fade" id="parameters0" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-md" role="document">
                 <div class="modal-content bg-dark text-light">
                     <div class="modal-header">
                         <h5 class="modal-title" id="parametersLabel">Source 1 Controls</h5>
@@ -123,18 +123,21 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class = "input-group">
-                            <select class="custom-select" id="oscType">
-                                <option value="sine" selected>Sine</option>
-                                <option value="square">Square</option>
-                                <option value="sawtooth">Sawtooth</option>
-                                <option value="triangle">Triangle</option>
-                                <option value="noise">Noise</option>
-                            </select>
-                            <input type="number" class="form-control" min="20.0" max="12000.00" value="440" name="freq" id="freq">
+                        <div class = "row align-items-center justify-content-center">
+                            <div class="col-2">
+                                <span>Osc</span>
+                            </div>
+                            <div class="input-group col-10 py-1">
+                                <select class="custom-select" id="oscType">
+                                    <option value="sine" selected>Sine</option>
+                                    <option value="square">Square</option>
+                                    <option value="sawtooth">Sawtooth</option>
+                                    <option value="triangle">Triangle</option>
+                                    <option value="noise">Noise</option>
+                                </select>
+                                <input type="number" class="form-control" min="20.0" max="12000.00" value="440" name="freq" id="freq">
+                            </div>
                         </div>
-
-                        <br>
                         
                         <div class="row align-items-center justify-content-center">
                             <div class="col-2">
@@ -154,21 +157,58 @@
                             </div>  
                         </div>
 
-                        <hr>
-
-                        <div class = "input-group">
-                            <select class="custom-select" id="fType">
-                                <option value="lowpass" selected>Lowpass</option>
-                                <option value="highpass">Highpass</option>
-                                <option value="bandpass">Bandpass</option>
-                            </select>
-                        </div>
+                        <hr class="hrlight">
                         
-                        <br>
+                        <div class = "row align-items-center justify-content-center">
+                            <div class="col-2">
+                                <span>FM</span>
+                            </div>
+                            <div class="col-10 py-1">
+                                <select class="custom-select" id="modType">
+                                    <option value="sine" selected>Sine</option>
+                                    <option value="square">Square</option>
+                                    <option value="sawtooth">Sawtooth</option>
+                                    <option value="triangle">Triangle</option>
+                                </select>
+                            </div>
+                        </div>
 
                         <div class="row align-items-center justify-content-center">
                             <div class="col-2">
+                                <span>Multi</span>
+                            </div>
+                            <div class="col-10">
+                                    <input type="range" min="0.05" max="3.0" step="0.01" value="1.0" name="multi" id="multi">
+                            </div>  
+                        </div>
+
+                        <div class="row align-items-center justify-content-center">
+                            <div class="col-2">
+                                <span>Depth</span>
+                            </div>
+                            <div class="col-10">
+                                <input type="range" min="0" max="1000" step="1" value="0" name="modDepth" id="modDepth">
+                            </div>  
+                        </div>
+
+                        <hr class="hrlight">
+
+                        <div class = "row align-items-center justify-content-center">
+                            <div class="col-2">
                                 <span>Filter</span>
+                            </div>
+                            <div class="col-10 py-1">
+                                <select class="custom-select" id="fType">
+                                    <option value="lowpass" selected>Lowpass</option>
+                                    <option value="highpass">Highpass</option>
+                                    <option value="bandpass">Bandpass</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row align-items-center justify-content-center">
+                            <div class="col-2">
+                                <span>Freq</span>
                             </div>
                             <div class="col-10">
                                 <input type="range" min="0" max="10000" step="1" value="0" name="filter" id="filter">
@@ -193,7 +233,36 @@
                             </div>  
                         </div>
 
-                        <hr>
+                        <hr class="hrlight">
+
+                        <div class="row align-items-center justify-content-center">
+                            <div class="col-2">
+                                <span>Delay</span>
+                            </div>
+                            <div class="col-10">
+                                <input type="range" min="0" max="2" step="0.01" value="0" name="delay" id="delay">
+                            </div>  
+                        </div>
+
+                        <div class="row align-items-center justify-content-center">
+                            <div class="col-2">
+                                <span>Pan</span>
+                            </div>
+                            <div class="col-10">
+                                <input type="range" min="-1.0" max="1.0" step="0.1" value="0.0" name="dPan" id="dPan">
+                            </div>  
+                        </div>
+
+                        <div class="row align-items-center justify-content-center">
+                            <div class="col-2">
+                                <span>Level</span>
+                            </div>
+                            <div class="col-10">
+                                <input type="range" min="0" max="1" step="0.01" value="0" name="dLvl" id="dLvl">
+                            </div>  
+                        </div>
+
+                        <hr class="hrlight">
 
                         <div class="row align-items-center justify-content-center">
                             <div class="col-2">
