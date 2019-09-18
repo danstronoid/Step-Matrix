@@ -24,6 +24,49 @@ class Notes {
     get rndNote(){
         return this.midiNotes[Math.floor(Math.random() * this.midiNotes.length)];
     }
+
+    pitch(pc) {
+        let noteNum;
+        switch (pc.substr(0, 1).toUpperCase()) {
+            case "C":
+                noteNum = 0;
+                break;
+            case "D":
+                noteNum = 2;
+                break;
+            case "E":
+                noteNum = 4;
+                break;
+            case "F":
+                noteNum = 5;
+                break;
+            case "G":
+                noteNum = 7;
+                break;
+            case "A":
+                noteNum = 9;
+                break;
+            case "B":
+                noteNum = 11;
+                break;
+            default:
+                noteNum = NaN;
+        }
+        if (pc.length == 3) {
+            if (pc.substr(1, 1) == "#") {
+                ++noteNum;
+            } else if (pc.substr(1, 1) == "b") {
+                --noteNum;
+            }
+            noteNum = noteNum + 12 * parseInt(pc.substr(2, 1));
+        } else if (pc.length > 3) {
+            noteNum = NaN;
+        } else {
+            noteNum = noteNum + 12 * parseInt(pc.substr(1, 1));   
+        } 
+
+        return this.midiNotes[noteNum];
+    }
 }
 
 export {Notes};

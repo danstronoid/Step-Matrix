@@ -20,62 +20,98 @@
 
     <body>
         <br>
-        <div class="row justify-content-center align-items-end">
-            <div class="col-2" style="text-align: center">
-                <button type="button" data-toggle="button" id="play" class="btn btn-primary btn-lg">Play</button>   
-            </div>
-            <div class="col-1" style="text-align: center">
-                <span>Tempo</span>
-                <input type="number" class="form-control" min="60.0" max="240.00" value="120" name="tempo" id="tempo"> 
-            </div>
-        </div>
         <br>
-
         <div class="row justify-content-center">
+            <div class="col-xl-auto">
+                <div class="card text-center border-dark">
+                    <div class="card-header bg-dark">
 
-            <table class="table table-borderless col-xl-6">
-                <thead>
-                   
-                </thead>
-                <tbody style="text-align: center">
+                        <div class="row justify-content-center align-items-center">
+                            <div class="col-1" style="text-align: center">
+                                <span class="text-light">Tempo</span>
+                            </div>
+                            
+                            <div class="col-2" style="text-align: left">
+                                <input type="number" class="form-control" min="60.0" max="240.00" value="120" name="tempo" id="tempo"> 
+                            </div>
 
-                    <tr id="notes0">
-                        <td></td>
-                        <td><input type="number" size="2" class="form-control" min="0" max="127" value="69" name="n1" id="n0"></td>
-                        <td><input type="number" size="2" class="form-control" min="0" max="127" value="69" name="n2" id="n1"></td>
-                        <td><input type="number" size="2" class="form-control" min="0" max="127" value="69" name="n3" id="n2"></td>
-                        <td><input type="number" size="2" class="form-control" min="0" max="127" value="69" name="n4" id="n3"></td>
-                        <td><input type="number" size="2" class="form-control" min="0" max="127" value="69" name="n5" id="n4"></td>
-                        <td><input type="number" size="2" class="form-control" min="0" max="127" value="69" name="n6" id="n5"></td>
-                        <td><input type="number" size="2" class="form-control" min="0" max="127" value="69" name="n7" id="n6"></td>
-                        <td><input type="number" size="2" class="form-control" min="0" max="127" value="69" name="n8" id="n7"></td>
-                    </tr>
+                            <div class="col-2" style="text-align: center">
+                                <span class="text-light">Sub-Division</span>
+                            </div>
 
-                    <tr id="track0">
-                        <td><button type="button" id="controls" class="btn btn-dark btn-lg" data-toggle="modal" data-target="#parameters0">S</button></td>
-                        <td><button type="button" data-toggle="button" id="b0" class="btn btn-light btn-outline-dark btn-lg" aria-pressed="false">1</button></td>
-                        <td><button type="button" data-toggle="button" id="b1" class="btn btn-light btn-outline-dark btn-lg" aria-pressed="false">2</button></td>
-                        <td><button type="button" data-toggle="button" id="b2" class="btn btn-light btn-outline-dark btn-lg" aria-pressed="false">3</button></td>
-                        <td><button type="button" data-toggle="button" id="b3" class="btn btn-light btn-outline-dark btn-lg" aria-pressed="false">4</button></td>
-                        <td><button type="button" data-toggle="button" id="b4" class="btn btn-light btn-outline-dark btn-lg" aria-pressed="false">5</button></td>
-                        <td><button type="button" data-toggle="button" id="b5" class="btn btn-light btn-outline-dark btn-lg" aria-pressed="false">6</button></td>
-                        <td><button type="button" data-toggle="button" id="b6" class="btn btn-light btn-outline-dark btn-lg" aria-pressed="false">7</button></td>
-                        <td><button type="button" data-toggle="button" id="b7" class="btn btn-light btn-outline-dark btn-lg" aria-pressed="false">8</button></td>
-                    </tr>
+                            <div class="col-2" style="text-align: left">
+                                <select class="custom-select" id="subdivision">
+                                    <option value="1">1/4</option>
+                                    <option value="2" selected>1/8</option>
+                                    <option value="4">1/16</option>
+                                </select>
+                            </div>
 
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th scope="col">
-                            <div class="btn-group" role="group">
-                                <button type="button" id="addSource" class="btn btn-dark btn-lg">+</button>
-                                <button type="button" id="rmSource" class="btn btn-dark btn-lg">-</button>
-                            </div> 
-                        </th>
-                    </tr>
-                </tfoot>
-            </table>
+                            <div class="col-3" style="text-align: center">
+                                <button type="button" id="play" class="btn btn-success btn-lg">►</button>   
+                            </div>
 
+                            <div class="col-2">
+                                <span class="text-light">Steps &nbsp;</span>
+                                <div class="btn-group" role="group">
+                                    <button type="button" id="addStep" class="btn btn-secondary btn-sm">+</button>
+                                    <button type="button" id="rmStep" class="btn btn-secondary btn-sm">-</button>
+                                </div> 
+                            </div>
+                            
+                        </div>
+
+                    </div>
+
+                    <div class="card-body bg-secondary">
+
+                        <table class="table table-borderless">
+                            <thead style="text-align: center">
+                                <tr>
+                                </tr>   
+                            </thead>
+                            <tbody style="text-align: center">
+            
+                                <tr id="notes0">
+                                    <td></td>
+                                    <td><input type="text" size="3" class="form-control" value="-" id="n0"></td>
+                                    <td><input type="text" size="3" class="form-control" value="-" id="n1"></td>
+                                    <td><input type="text" size="3" class="form-control" value="-" id="n2"></td>
+                                    <td><input type="text" size="3" class="form-control" value="-" id="n3"></td>
+                                    <td><input type="text" size="3" class="form-control" value="-" id="n4"></td>
+                                    <td><input type="text" size="3" class="form-control" value="-" id="n5"></td>
+                                    <td><input type="text" size="3" class="form-control" value="-" id="n6"></td>
+                                    <td><input type="text" size="3" class="form-control" value="-" id="n7"></td>
+                                </tr>
+            
+                                <tr id="track0">
+                                    <td><button type="button" id="controls" class="btn btn-dark btn-lg" data-toggle="modal" data-target="#parameters0">S1</button></td>
+                                    <td><button type="button" data-toggle="button" id="b0" class="btn btn-light btn-outline-dark btn-lg" aria-pressed="false">1</button></td>
+                                    <td><button type="button" data-toggle="button" id="b1" class="btn btn-light btn-outline-dark btn-lg" aria-pressed="false">2</button></td>
+                                    <td><button type="button" data-toggle="button" id="b2" class="btn btn-light btn-outline-dark btn-lg" aria-pressed="false">3</button></td>
+                                    <td><button type="button" data-toggle="button" id="b3" class="btn btn-light btn-outline-dark btn-lg" aria-pressed="false">4</button></td>
+                                    <td><button type="button" data-toggle="button" id="b4" class="btn btn-light btn-outline-dark btn-lg" aria-pressed="false">5</button></td>
+                                    <td><button type="button" data-toggle="button" id="b5" class="btn btn-light btn-outline-dark btn-lg" aria-pressed="false">6</button></td>
+                                    <td><button type="button" data-toggle="button" id="b6" class="btn btn-light btn-outline-dark btn-lg" aria-pressed="false">7</button></td>
+                                    <td><button type="button" data-toggle="button" id="b7" class="btn btn-light btn-outline-dark btn-lg" aria-pressed="false">8</button></td>
+                                </tr>
+            
+                            </tbody>
+                            <tfoot style="text-align: center">
+                                <tr>
+                                    <th scope="col">
+                                        <div class="btn-group" role="group">
+                                            <button type="button" id="addSource" class="btn btn-dark btn-sm">+</button>
+                                            <button type="button" id="rmSource" class="btn btn-dark btn-sm">-</button>
+                                        </div> 
+                                    </th>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>  
+                </div>
+            </div>
         </div>
 
         <!-- Control Modals -->
@@ -83,7 +119,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Source Controls</h5>
+                        <h5 class="modal-title" id="parametersLabel">Source 1 Controls</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
@@ -100,7 +136,7 @@
                             <input type="number" class="form-control" min="20.0" max="12000.00" value="440" name="freq" id="freq">
                         </div>
 
-                        <hr>
+                        <br>
                         
                         <div class="row align-items-center justify-content-center">
                             <div class="col-2">
@@ -116,18 +152,46 @@
                                 <span>Release</span>
                             </div>
                             <div class="col-10">
-                                <input type="range" min="0.1" max="1.0" step="0.01" value="0.3" name="release" id="release">
+                                <input type="range" min="0.2" max="1.0" step="0.01" value="0.3" name="release" id="release">
                             </div>  
                         </div>
 
                         <hr>
+
+                        <div class = "input-group">
+                            <select class="custom-select" id="fType">
+                                <option value="lowpass" selected>Lowpass</option>
+                                <option value="highpass">Highpass</option>
+                                <option value="bandpass">Bandpass</option>
+                            </select>
+                        </div>
+                        
+                        <br>
 
                         <div class="row align-items-center justify-content-center">
                             <div class="col-2">
                                 <span>Filter</span>
                             </div>
                             <div class="col-10">
-                                <input type="range" min="0" max="10000" step="1" value="500" name="filter" id="filter">
+                                <input type="range" min="0" max="10000" step="1" value="0" name="filter" id="filter">
+                            </div>  
+                        </div>
+
+                        <div class="row align-items-center justify-content-center">
+                            <div class="col-2">
+                                <span>Attack</span>
+                            </div>
+                            <div class="col-10">
+                                <input type="range" min="0.0" max="1" step="0.01" value="0.01" name="fattack" id="fattack">
+                            </div>  
+                        </div>
+
+                        <div class="row align-items-center justify-content-center">
+                            <div class="col-2">
+                                <span>Release</span>
+                            </div>
+                            <div class="col-10">
+                                <input type="range" min="0.2" max="1.0" step="0.01" value="0.3" name="frelease" id="frelease">
                             </div>  
                         </div>
 

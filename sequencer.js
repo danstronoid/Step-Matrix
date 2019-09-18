@@ -2,46 +2,51 @@
 
 import {SynthOsc, SynthNoise} from './modules/osc.js';
 import {Notes} from './modules/notes.js'
+import { Fx } from './modules/fx.js';
 
 // for cross browser compatibility
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioCtx = new AudioContext();
 
-// initialize our midi notes
-const Note = new Notes;
-
-// keep track of the sources
-let sourceCount = 0;
+// set amount of time for the scheduler to schedule ahead
+const lookahead = 25.0; // (ms)
+const scheduleAheadTime = 0.1; // (sec)
 
 let timerID; // create a timer
 
-// set the global tempo
-let tempo = Number($('#tempo').val());
+const Note = new Notes; // initialize note class with a table of midi note values
 
-// set amount of time for the scheduler to schedule ahead
-let lookahead = 25.0; // (ms)
-let scheduleAheadTime = 0.1; // (sec)
+let sourceCount = 0; // keep track of the number of sources
+let stepCount = 7; // keep track of the number of steps
 
-// keep track of the current note in the pattern 
-// and the amount of time until the next note 
-let currentNote = 0;
-let nextNoteTime = 0.0;
+let tempo = Number($('#tempo').val()); // set the global tempo
+let currentNote = 0; // keep track of the current note in the pattern 
+let nextNoteTime = 0.0; // the amount of time until the next note 
+
+// this calculates the amount of time until the next note and updates the current note
 function nextNote() {
+    let subdivision = Number($('#subdivision').val());
     const secondsPerBeat = 60.0 / tempo;
-    nextNoteTime += (secondsPerBeat / 2);
+    nextNoteTime += (secondsPerBeat / subdivision);
     currentNote++;
-    if (currentNote === 8) {
+    if (currentNote === stepCount + 1) {
         currentNote = 0;
     }
 }
 
-// create an object containing synth parameters to pass to synth class
-function SynthObj(parameters) {
+// create an object containing arguments to pass to the source class
+function SourceArgs(parameters) {
     this.oscType = $('#' + parameters).find('#oscType').val();
     this.freq = $('#' + parameters).find('#freq').val();
     this.attack = Number($('#' + parameters).find('#attack').val());
     this.release = Number($('#' + parameters).find('#release').val());
+}
+
+function FxArgs(parameters) {
     this.filter = Number($('#' + parameters).find('#filter').val());
+    this.ftype = $('#' + parameters).find('#fType').val();
+    this.fattack = Number($('#' + parameters).find('#fattack').val());
+    this.frelease = Number($('#' + parameters).find('#frelease').val());
     this.pan = Number($('#' + parameters).find('#pan').val());
     this.vol = Number($('#' + parameters).find('#volume').val());
 }
@@ -51,20 +56,33 @@ function scheduleNote(beat, time) {
     for (let i = 0; i <= sourceCount; ++i) {
         if ($('#track' + i).find('#b' + beat).hasClass('active')) { 
             let source;       
-            let params = new SynthObj("parameters" + i);
+            let sourceArgs = new SourceArgs('parameters' + i);
+            let fxArgs = new FxArgs('parameters' + i);
     
             // get midi note and set to freq
-            let noteNum = Number($('#notes' + i).find('#n' + beat).val());
-            params.freq = Note.midi(noteNum); 
+            let n = $('#notes' + i).find('#n' + beat).val();
+
+            sourceArgs.freq = Note.pitch(n) || Note.midi(Number(n)) || sourceArgs.freq;
     
-            if (params.oscType == 'noise') {
-                source = new SynthNoise(audioCtx, params);
+            if (sourceArgs.oscType == 'noise') {
+                source = new SynthNoise(audioCtx, sourceArgs, fxArgs);
             } else {
-                source = new SynthOsc(audioCtx, params);
+                source = new SynthOsc(audioCtx, sourceArgs, fxArgs);
             }
-            source.play(time);   
+            source.play(time);
+
+            $('#track' + i).find('#b' + beat).attr('class', 'btn btn-danger btn-lg active');
+            setTimeout( () => {
+                $('#track' + i).find('#b' + beat).attr('class', 'btn btn-light btn-outline-dark btn-lg active');
+            }, 200);
+        } else {
+            /* $('#track' + i).find('#b' + beat).attr('class', 'btn btn-light btn-outline-danger btn-lg');
+            setTimeout( () => {
+                $('#track' + i).find('#b' + beat).attr('class', 'btn btn-light btn-outline-dark btn-lg');
+            }, 200); */
         }
     }
+    
 }
 
 // responsible for scheduling next note ahead of time
@@ -93,7 +111,13 @@ function setup() {
             $('#notes0').clone().attr('id', 'notes' + sourceCount).appendTo('tbody');
             $('#track0').clone().attr('id', 'track' + sourceCount).appendTo('tbody');
             $('#parameters0').clone().attr('id', 'parameters' + sourceCount).appendTo('body');
-            $('#track' + sourceCount).find("#controls").attr('data-target', '#parameters' + sourceCount);
+            $('#parameters' + sourceCount).find('#parametersLabel').text('Source ' + (sourceCount + 1) + ' Controls')
+            $('#track' + sourceCount).find("#controls").attr('data-target', '#parameters' + sourceCount).text('S' + (sourceCount + 1));
+
+            for (let i = 0; i <= stepCount; ++i) {
+                $('#notes' + sourceCount).find('#n' + i).val('-');
+                $('#track' + sourceCount).find('#b' + i).attr('class', 'btn btn-light btn-outline-dark btn-lg');
+            }
         }     
     });
 
@@ -106,11 +130,43 @@ function setup() {
             --sourceCount;
         }
     });
+
+    // add a new step
+    $('#addStep').on('click', () => {
+        if (stepCount < 15) {
+            ++stepCount;
+
+            // create a new step for each source
+            for (let i = 0; i <= sourceCount; ++i) {
+                let cloneB = $('#b0').clone().attr('id', 'b' + stepCount).attr('class', 'btn btn-light btn-outline-dark btn-lg').text(stepCount + 1);
+                let newB = $('<td></td>').html(cloneB);
+                $('#track' + i).append(newB);
+
+                let cloneN = $('#n0').clone().attr('id', 'n' + stepCount).val('-');
+                let newN = $('<td></td>').html(cloneN);
+                $('#notes' + i).append(newN);
+            }
+        }   
+    });
+
+    // remove a step
+    $('#rmStep').on('click', () => {
+        if (stepCount > 0) {
+            // remove the step for all sources
+            for (let i = 0; i <= sourceCount; ++i) {
+                $('#track' + i).find('#b' + stepCount).parent().remove();
+
+                $('#notes' + i).find('#n' + stepCount).parent().remove();
+            }
+            --stepCount;
+        }
+    });
     
   
     // button to start playback
     $('#play').on('click', () => {
         isPlaying = !isPlaying;
+        $('#play').text('■').attr('class', 'btn btn-danger btn-lg active');
 
         if (isPlaying) {
             if (audioCtx.state === 'suspended') {
@@ -122,6 +178,7 @@ function setup() {
             scheduler();
         } else {
             window.clearTimeout(timerID);
+            $('#play').text('►').attr('class', 'btn btn-success btn-lg');
         }
        
     });

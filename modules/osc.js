@@ -2,26 +2,21 @@ import {SynthSource} from './source.js';
 
 // creates a synth oscillator
 class SynthOsc extends SynthSource {
-    constructor(audioCtx, SynthObj) {
-        super(audioCtx);
+    constructor(audioCtx, SourceArgs, FxArgs) {
+        super(audioCtx, FxArgs);
 
         //create osc and set type/freq
         this.osc = this.audioCtx.createOscillator();
-        this.osc.type = SynthObj.oscType;
-        this.osc.frequency.value = SynthObj.freq;
+        this.osc.type = SourceArgs.oscType;
+        this.osc.frequency.value = SourceArgs.freq;
 
         // set attack and release
-        this.attack = SynthObj.attack;
-        this.release = SynthObj.release;
+        this.attack = SourceArgs.attack;
+        this.release = SourceArgs.release;
 
         // create gain envelope
         this.oscEnv = this.audioCtx.createGain();
         this.createEnv(this.oscEnv, this.attack, this.release);
-
-        // set fx parameters
-        this.fx.setFilter(SynthObj.filter, this.attack, this.release);
-        this.fx.setPan(SynthObj.pan);
-        this.fx.setVol(SynthObj.vol);
         
         // connect to output, all patching here
         this.connectOutput(this.osc.connect(this.oscEnv));
@@ -36,11 +31,11 @@ class SynthOsc extends SynthSource {
 
 // creates a noise oscillator
 class SynthNoise extends SynthSource {
-    constructor(audioCtx, SynthObj) {
-        super(audioCtx);
+    constructor(audioCtx, SourceArgs, FxArgs) {
+        super(audioCtx, FxArgs);
 
         // create a buffer for noise
-        const bufferSize = this.audioCtx.sampleRate * (SynthObj.attack + SynthObj.release);
+        const bufferSize = this.audioCtx.sampleRate * (SourceArgs.attack + SourceArgs.release);
         const buffer = this.audioCtx.createBuffer(1, bufferSize, this.audioCtx.sampleRate);
         let data = buffer.getChannelData(0);
 
@@ -54,17 +49,12 @@ class SynthNoise extends SynthSource {
         this.noise.buffer = buffer;
 
         // set attack and release
-        this.attack = SynthObj.attack;
-        this.release = SynthObj.release;
+        this.attack = SourceArgs.attack;
+        this.release = SourceArgs.release;
 
         // create gain env
         this.noiseEnv = this.audioCtx.createGain();
         this.createEnv(this.noiseEnv, this.attack, this.release);
-
-        // set fx parameters
-        this.fx.setFilter(SynthObj.filter, this.attack, this.release);
-        this.fx.setPan(SynthObj.pan);
-        this.fx.setVol(SynthObj.vol);
 
         // connect to output, all patching here
         this.connectOutput(this.noise.connect(this.noiseEnv));

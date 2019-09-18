@@ -2,7 +2,7 @@ import {Fx} from './fx.js';
 
 // the abstract base class for a new synth source
 class SynthSource {
-    constructor(audioCtx) {
+    constructor(audioCtx, FxArgs) {
         if (this.constructor === SynthSource) {
             throw new TypeError('Abstract class "SynthSource" cannot be instantiated directly');
         }
@@ -11,6 +11,12 @@ class SynthSource {
 
         // initialize fx
         this.fx = new Fx(this.audioCtx);
+
+        // set fx parameters
+        this.fxArgs = FxArgs;
+        this.fx.setFilter(FxArgs.filter, FxArgs.ftype, FxArgs.fattack, FxArgs.frelease);
+        this.fx.setPan(FxArgs.pan);
+        this.fx.setVol(FxArgs.vol);
     }
 
     // get current time
@@ -25,8 +31,14 @@ class SynthSource {
 
     // connect source to fx and output
     connectOutput(source) {
-        source.connect(this.fx.filter);
-        this.fx.filter.connect(this.fx.panner);
+
+        // bypass the filter if the freq is less than 20Hz
+        if (this.fxArgs.filter > 20) {
+            source.connect(this.fx.filter);
+            this.fx.filter.connect(this.fx.panner);
+        } else {
+            source.connect(this.fx.panner);
+        }
         this.fx.panner.connect(this.fx.fader);
         this.fx.fader.connect(this.out);
     }

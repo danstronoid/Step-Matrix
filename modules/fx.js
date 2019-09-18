@@ -23,9 +23,14 @@ class Fx {
     }
 
     // set filter freq
+    // optional: set filter type
     // optional: set attack and release to create a filter env
-    setFilter(value, attack, release) {
-        this.filter.type = "lowpass";
+    setFilter(value, type, attack, release) {
+        if (!type) {
+            this.filter.type = 'lowpass';
+        } else {
+            this.filter.type = type;
+        }
         this.filter.Q.setValueAtTime(2, this.now);
         if (!attack || !release) {
             this.filter.frequency.setValueAtTime(value, this.now);
