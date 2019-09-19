@@ -59,10 +59,11 @@ class SynthSource {
     }
         
     // create an envelope
-    createEnv(env, attack, release) {
+    createEnv(env, attack, release, veloc) {
+        let maxGain = 0.5
         env.gain.cancelScheduledValues(this.now);
         env.gain.setValueAtTime(0, this.now);
-        env.gain.linearRampToValueAtTime(0.3, this.now + attack);
+        env.gain.linearRampToValueAtTime(maxGain * (veloc / 127), this.now + attack);
         env.gain.linearRampToValueAtTime(0, this.now + attack + release);
     }
 }

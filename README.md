@@ -3,3 +3,6 @@ by Daniel Schwartz
 
 Web Audio API based step-sequencer
 
+# TODO
+Add Node.js server
+Add load function

@@ -21,13 +21,14 @@ class SynthOsc extends SynthSource {
         this.mod.connect(this.modGain);
         this.modGain.connect(this.osc.frequency);
 
-        // set attack and release
+        // set attack, release, and velocity
         this.attack = SourceArgs.attack;
         this.release = SourceArgs.release;
+        this.veloc = SourceArgs.veloc;
 
         // create gain envelope
         this.oscEnv = this.audioCtx.createGain();
-        this.createEnv(this.oscEnv, this.attack, this.release);
+        this.createEnv(this.oscEnv, this.attack, this.release, this.veloc);
         
         // connect to output, all patching here
         this.connectOutput(this.osc.connect(this.oscEnv));

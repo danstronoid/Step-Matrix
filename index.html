@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
         <!-- bootstrap javascript  -->
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
@@ -23,7 +23,7 @@
 
             <div class="row px-3 justify-content-left align-items-center text-center transport">
 
-                <div class="col-md-2 text-left">
+                <div class="col-md-3 text-left">
                     <h1 class="text-light">Step Matrix</h1>
                 </div>
 
@@ -31,7 +31,7 @@
                     <span class="text-light">Tempo</span>
                 </div>
                 
-                <div class="col-md-2 p-2">
+                <div class="col-md-1 p-2">
                     <input type="number" class="form-control" min="60.0" max="240.00" value="120" name="tempo" id="tempo"> 
                 </div>
 
@@ -39,7 +39,7 @@
                     <span class="text-light">Division</span>
                 </div>
 
-                <div class="col-md-2 p-2">
+                <div class="col-md-1 p-2">
                     <select class="custom-select" id="subdivision">
                         <option value="1">1/4</option>
                         <option value="2" selected>1/8</option>
@@ -49,6 +49,13 @@
 
                 <div class="col-md-2 p-3">
                     <button type="button" id="play" class="btn btn-success btn-lg">►</button>   
+                </div>
+
+                <div class="col-md-1 p-0">
+                    <div class="btn-group" role="group">
+                        <button type="button" data-toggle="button" id="pitch" class="btn btn-dark btn-sm">Pitch</button>
+                        <button type="button" data-toggle="button" id="velocity" class="btn btn-dark btn-sm">Velocity</button>   
+                    </div>
                 </div>
 
                 <div class="col-md-1 p-2">
@@ -80,6 +87,18 @@
                             <td><input type="text" class="text-center rounded step" value="-" id="n5"></td>
                             <td><input type="text" class="text-center rounded step" value="-" id="n6"></td>
                             <td><input type="text" class="text-center rounded step" value="-" id="n7"></td>
+                        </tr>
+
+                        <tr id="veloc0" class="align-items-center bg-dark">
+                            <td><span class="text-light">Velocity</span></td>
+                            <td><input type="number" min="0" max="127" step="1" class="text-center rounded step" value="127" id="v0"></td>
+                            <td><input type="number" min="0" max="127" step="1" class="text-center rounded step" value="127" id="v1"></td>
+                            <td><input type="number" min="0" max="127" step="1" class="text-center rounded step" value="127" id="v2"></td>
+                            <td><input type="number" min="0" max="127" step="1" class="text-center rounded step" value="127" id="v3"></td>
+                            <td><input type="number" min="0" max="127" step="1" class="text-center rounded step" value="127" id="v4"></td>
+                            <td><input type="number" min="0" max="127" step="1" class="text-center rounded step" value="127" id="v5"></td>
+                            <td><input type="number" min="0" max="127" step="1" class="text-center rounded step" value="127" id="v6"></td>
+                            <td><input type="number" min="0" max="127" step="1" class="text-center rounded step" value="127" id="v7"></td>
                         </tr>
     
                         <tr id="track0">
@@ -240,7 +259,7 @@
                                 <span>Delay</span>
                             </div>
                             <div class="col-10">
-                                <input type="range" min="0" max="2" step="0.01" value="0" name="delay" id="delay">
+                                <input type="range" min="0" max="1" step="0.01" value="0" name="delay" id="delay">
                             </div>  
                         </div>
 

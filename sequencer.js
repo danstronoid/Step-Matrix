@@ -1,7 +1,7 @@
 // timing and sequencer based on https://www.html5rocks.com/en/tutorials/audio/scheduling/ by Chris Wilson
 
 import {SynthOsc, SynthNoise} from './modules/osc.js';
-import {Notes} from './modules/notes.js'
+import {Notes} from './modules/notes.js';
 import { Fx } from './modules/fx.js';
 
 // for cross browser compatibility
@@ -38,6 +38,7 @@ function nextNote() {
 function SourceArgs(parameters) {
     this.oscType = $('#' + parameters).find('#oscType').val();
     this.freq = $('#' + parameters).find('#freq').val();
+    this.veloc = 127;
     this.attack = Number($('#' + parameters).find('#attack').val());
     this.release = Number($('#' + parameters).find('#release').val());
     this.modType = $('#' + parameters).find('#modType').val();
@@ -68,9 +69,13 @@ function scheduleNote(beat, time) {
     
             // get midi note and set to freq
             let n = $('#notes' + i).find('#n' + beat).val();
-
             sourceArgs.freq = Note.pitch(n) || Note.midi(Number(n)) || sourceArgs.freq;
-    
+
+            // get velocity
+            let v = $('#veloc' + i).find('#v' + beat).val();
+            sourceArgs.veloc = v || sourceArgs.veloc;
+
+            // create and play source
             if (sourceArgs.oscType == 'noise') {
                 source = new SynthNoise(audioCtx, sourceArgs, fxArgs);
             } else {
@@ -113,9 +118,10 @@ function setup() {
 
     // add a new source
     $('#addSource').on('click', () => {
-        if (sourceCount < 5) {
+        if (sourceCount < 7) {
             ++sourceCount;
             $('#notes0').clone().attr('id', 'notes' + sourceCount).appendTo('tbody');
+            $('#veloc0').clone().attr('id', 'veloc' + sourceCount).appendTo('tbody');
             $('#track0').clone().attr('id', 'track' + sourceCount).appendTo('tbody');
             $('#parameters0').clone().attr('id', 'parameters' + sourceCount).appendTo('body');
             $('#parameters' + sourceCount).find('#parametersLabel').text('Source ' + (sourceCount + 1) + ' Controls')
@@ -123,6 +129,7 @@ function setup() {
 
             for (let i = 0; i <= stepCount; ++i) {
                 $('#notes' + sourceCount).find('#n' + i).val('-');
+                $('#veloc' + sourceCount).find('#v' + i).val('127');
                 $('#track' + sourceCount).find('#b' + i).attr('class', 'btn btn-light btn-outline-dark btn-lg step');
             }
         }     
@@ -132,6 +139,7 @@ function setup() {
     $('#rmSource').on('click', () => {
         if (sourceCount > 0) {
             $('#notes' + sourceCount).remove();
+            $('#veloc' + sourceCount).remove();
             $('#track' + sourceCount).remove();
             $('#parameters' + sourceCount).remove();
             --sourceCount;
@@ -152,6 +160,10 @@ function setup() {
                 let cloneN = $('#n0').clone().attr('id', 'n' + stepCount).val('-');
                 let newN = $('<td></td>').html(cloneN);
                 $('#notes' + i).append(newN);
+
+                let cloneV = $('#v0').clone().attr('id', 'v' + stepCount).val('127');
+                let newV = $('<td></td>').html(cloneV);
+                $('#veloc' + i).append(newV);
             }
         }   
     });
@@ -164,11 +176,24 @@ function setup() {
                 $('#track' + i).find('#b' + stepCount).parent().remove();
 
                 $('#notes' + i).find('#n' + stepCount).parent().remove();
+
+                $('#veloc' + i).find('#v' + stepCount).parent().remove();
             }
             --stepCount;
         }
     });
     
+    $('#pitch').on('click', () => {
+        for (let i = 0; i <= sourceCount; ++i) {
+            $('#notes' + i).toggle();
+        }
+    });
+
+    $('#velocity').on('click', () => {
+        for (let i = 0; i <= sourceCount; ++i) {
+            $('#veloc' + i).toggle();
+        }
+    });
   
     // button to start playback
     $('#play').on('click', () => {
