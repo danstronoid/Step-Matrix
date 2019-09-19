@@ -15,7 +15,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-        <script src="sequencer.js" type="module"></script>
+        <script src="/modules/sequencer.js" type="module"></script>
     </head>
 
     <body class="p">
@@ -23,23 +23,30 @@
 
             <div class="row px-3 justify-content-left align-items-center text-center transport">
 
-                <div class="col-md-3 text-left">
+                <div class="col-lg-3 text-left">
                     <h1 class="text-light">Step Matrix</h1>
                 </div>
 
-                <div class="col-md-1">
+                <div class="col-lg-2 py-2">
+                    <div class="btn-group" role="group">
+                        <button type="button" data-toggle="button" id="pitch" class="btn btn-dark btn-sm">Pitch</button>
+                        <button type="button" data-toggle="button" id="velocity" class="btn btn-dark btn-sm">Velocity</button>   
+                    </div>
+                </div>
+
+                <div class="col-lg-1">
                     <span class="text-light">Tempo</span>
                 </div>
                 
-                <div class="col-md-1 p-2">
-                    <input type="number" class="form-control" min="60.0" max="240.00" value="120" name="tempo" id="tempo"> 
+                <div class="col-lg-1 py-2">
+                    <input type="number" class="form-control text-center" min="60.0" max="240.00" value="120" name="tempo" id="tempo"> 
                 </div>
 
-                <div class="col-md-1">
+                <div class="col-lg-1">
                     <span class="text-light">Division</span>
                 </div>
 
-                <div class="col-md-1 p-2">
+                <div class="col-lg-1 py-2">
                     <select class="custom-select" id="subdivision">
                         <option value="1">1/4</option>
                         <option value="2" selected>1/8</option>
@@ -47,18 +54,11 @@
                     </select>
                 </div>
 
-                <div class="col-md-2 p-3">
+                <div class="col-lg-2 py-3">
                     <button type="button" id="play" class="btn btn-success btn-lg">►</button>   
                 </div>
 
-                <div class="col-md-1 p-0">
-                    <div class="btn-group" role="group">
-                        <button type="button" data-toggle="button" id="pitch" class="btn btn-dark btn-sm">Pitch</button>
-                        <button type="button" data-toggle="button" id="velocity" class="btn btn-dark btn-sm">Velocity</button>   
-                    </div>
-                </div>
-
-                <div class="col-md-1 p-2">
+                <div class="col-lg-1 py-2">
                     <span class="text-light">Steps &nbsp;</span>
                     <div class="btn-group" role="group">
                         <button type="button" id="addStep" class="btn btn-dark btn-sm">+</button>
@@ -77,7 +77,7 @@
                     </thead>
                     <tbody style="text-align: center">
     
-                        <tr id="notes0" class="align-items-center bg-dark">
+                        <tr id="notes0" class="align-items-center bg-dark" style="display: none;">
                             <td><span class="text-light">Pitch</span></td>
                             <td><input type="text" class="text-center rounded step" value="-" id="n0"></td>
                             <td><input type="text" class="text-center rounded step" value="-" id="n1"></td>
@@ -89,7 +89,7 @@
                             <td><input type="text" class="text-center rounded step" value="-" id="n7"></td>
                         </tr>
 
-                        <tr id="veloc0" class="align-items-center bg-dark">
+                        <tr id="veloc0" class="align-items-center bg-dark"style="display: none;">
                             <td><span class="text-light">Velocity</span></td>
                             <td><input type="number" min="0" max="127" step="1" class="text-center rounded step" value="127" id="v0"></td>
                             <td><input type="number" min="0" max="127" step="1" class="text-center rounded step" value="127" id="v1"></td>

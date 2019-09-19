@@ -13,3 +13,8 @@ body {
 .hrlight {
     border-top: 1px solid rgb(255, 255, 255);
 }
+
+.tempo {
+    height: 30px !important;
+    width: 80px !important;
+}

@@ -62,13 +62,14 @@ class SynthNoise extends SynthSource {
         this.noise = this.audioCtx.createBufferSource();
         this.noise.buffer = buffer;
 
-        // set attack and release
+        // set attack, release, and velocity
         this.attack = SourceArgs.attack;
         this.release = SourceArgs.release;
+        this.veloc = SourceArgs.veloc;
 
         // create gain env
         this.noiseEnv = this.audioCtx.createGain();
-        this.createEnv(this.noiseEnv, this.attack, this.release);
+        this.createEnv(this.noiseEnv, this.attack, this.release, this.veloc);
 
         // connect to output, all patching here
         this.connectOutput(this.noise.connect(this.noiseEnv));
